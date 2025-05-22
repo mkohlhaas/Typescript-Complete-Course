@@ -36,14 +36,22 @@
     console.log(isNotGreater); // false
 }
 {
-    // LECTURE 5: TYPE ASSIGNMENT & TYPE INFERANCE
+    // LECTURE 5: TYPE ASSIGNMENT & TYPE INFERENCE
+    //
+    // deno-lint-ignore no-inner-declarations
+    function sumer(num1, num2) {
+        return num1 + num2;
+    }
+    console.log(sumer(1, 2)); // 3
+    console.log(sumer("a", "b")); // ab
+    console.log(sumer("1", 2)); // 12
     // deno-lint-ignore no-inner-declarations
     function sum(num1, num2, isPrint, msg) {
+        var res = num1 + num2;
         if (isPrint) {
-            var s = num1 + num2;
-            console.log(msg + " " + s); // 30
+            console.log(msg + " " + res); // 30
         }
-        return num1 + num2;
+        return res;
     }
     var n1 = 10;
     var n2 = 20;
@@ -173,7 +181,7 @@
         function roleMessage1(role) {
             switch (role) {
                 case "admin":
-                    console.log("You have admin permission on this site.");
+                    console.log("You have admin permission on this site."); // You have admin permission on this site.
                     break;
                 case "read":
                     console.log("You have read permission on this site");
@@ -192,7 +200,7 @@
     // LECTURE 13: UNDERSTANDING TYPE ALIAS
     {
         var str = "Hello";
-        console.log(str);
+        console.log(str); // Hello
     }
     {
         // deno-lint-ignore no-inner-declarations
@@ -204,8 +212,8 @@
                 console.log("".concat(message, ". Status code: ").concat(code));
             }
         }
-        printStatus2("Request was successful", 200);
-        printStatus2("Resource was not found", "404");
+        printStatus2("Request was successful", 200); // Request was successful. Status code: 200
+        printStatus2("Resource was not found", "404"); // Resource was not found. Status code: 404
     }
     {
         // deno-lint-ignore no-inner-declarations
@@ -224,7 +232,7 @@
                     console.log("unknown user permission");
             }
         }
-        roleMessage2("admin");
+        roleMessage2("admin"); // You have admin permission on this site.
     }
     {
         // deno-lint-ignore no-inner-declarations
@@ -236,8 +244,8 @@
             return user.age >= 18;
         }
         var user = { firstname: "john", lastname: "smith", age: 32 };
-        console.log(getFullName(user));
-        console.log(isEligibleForVoting(user));
+        console.log(getFullName(user)); // john smith
+        console.log(isEligibleForVoting(user)); // true
     }
 }
 {
@@ -248,7 +256,7 @@
         console.log(num1 + num2);
         return;
     }
-    console.log(print_add(12, 13));
+    console.log(print_add(12, 13)); // 25
 }
 {
     // deno-lint-ignore no-inner-declarations
@@ -262,7 +270,7 @@
     }
     var greet = void 0;
     greet = greetUser;
-    var user = { name: "john", age: 28 };
+    var user = { name: "john", age: 28 }; // Hello, john
     greet(user);
     // deno-lint-ignore no-inner-declarations
     function sum1(n1, n2) {
@@ -271,7 +279,7 @@
     sum1(1, 2);
     // greet = sum1; // error
     greet = isEligible;
-    greet(user);
+    greet(user); // true
 }
 {
     // LECTURE 16: FUNCTION TYPE FOR CALLBACK
@@ -285,7 +293,7 @@
     function add(num1, num2) {
         console.log(num1 + num2);
     }
-    add(1, 2);
+    add(1, 2); // 3
     // addNumbers = add; //Error
     // deno-lint-ignore no-inner-declarations
     function getResult(num1, num2, print) {
@@ -296,7 +304,7 @@
     function display(msg, result) {
         console.log(msg + result);
     }
-    getResult(12, 13, display);
+    getResult(12, 13, display); // Sum = 25
 }
 {
     // LECTURE 17: UNION TYPE IN TYPESCRIPT
@@ -307,8 +315,8 @@
     if (typeof inputVal === "string") {
         uname = inputVal;
     }
-    console.log(uname);
-    console.log(typeof inputVal);
+    console.log(uname); // Hello, world
+    console.log(typeof inputVal); // string
 }
 {
     // LECTURE 18: `never` TYPE IN TYPESCRIPT
@@ -317,32 +325,12 @@
     function greetUser1(name) {
         console.log("Hello, " + name);
     }
-    greetUser1("John");
+    greetUser1("John"); // Hello, John
     // deno-lint-ignore no-inner-declarations
     function createerror(errormsg, errorCode) {
         throw { message: errormsg, code: errorCode };
     }
     //createerror('Internal server error', 500);
-    console.log(greetUser1("Mark"));
-    console.log(createerror("Page not found", 404));
+    console.log(greetUser1("Mark")); // Hello, Mark
+    console.log(createerror("Page not found", 404)); // Uncaught: Object { message: "Page not found", code: 404 }
 }
-// You have admin permission on this site.
-// Hello
-// Request was successful. Status code: 200
-// Resource was not found. Status code: 404
-// You have admin permission on this site.
-// john smith
-// true
-// 25
-// undefined
-// Hello, john
-// true
-// 3
-// Sum = 25
-// Hello, world
-// string
-// Hello, John
-// Hello, Mark
-// undefined
-// Uncaught
-// Object { message: "Page not found", code: 404 }

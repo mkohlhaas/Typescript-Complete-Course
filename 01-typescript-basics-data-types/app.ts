@@ -41,12 +41,19 @@
   // LECTURE 5: TYPE ASSIGNMENT & TYPE INFERENCE
   //
   // deno-lint-ignore no-inner-declarations
-  function sum(num1: number, num2: number, isPrint: boolean, msg: string) {
-    if (isPrint) {
-      const s = num1 + num2;
-      console.log(msg + " " + s); // 30
-    }
+  function sumer(num1, num2) {
     return num1 + num2;
+  }
+  console.log(sumer(1, 2)); // 3
+  console.log(sumer("a", "b")); // ab
+  console.log(sumer("1", 2)); // 12
+  // deno-lint-ignore no-inner-declarations
+  function sum(num1: number, num2: number, isPrint: boolean, msg: string) {
+    const res = num1 + num2;
+    if (isPrint) {
+      console.log(msg + " " + res); // 30
+    }
+    return res;
   }
   const n1 = 10;
   const n2 = 20;
