@@ -1,4 +1,3 @@
-
 let data = 'Some value';
 
 function sum(num1: number, num2: number) {
@@ -7,7 +6,7 @@ function sum(num1: number, num2: number) {
         return result;
     } else {
         console.log('Numbers must be greater than zero')
-        return;
+        // return;
     }
 }
 
