@@ -1,6 +1,6 @@
 const button = document.getElementById('btn')!;
 
-function clickHandler(message: string){
+function clickHandler(message: string) {
     console.log(message);
 }
 
