@@ -7,7 +7,6 @@
 }
 {
     // LECTURE 4: DATATYPES IN TYPESCRIPT
-    //
     // 1. STRING DATATYPE
     var str1 = "This is a string created ${str2} using single quotes";
     var str2 = "this is a string created using double quotes";
@@ -37,17 +36,14 @@
 }
 {
     // LECTURE 5: TYPE ASSIGNMENT & TYPE INFERENCE
-    //
-    // deno-lint-ignore no-inner-declarations
-    function sumer(num1, num2) {
-        return num1 + num2;
+    function sumup(n1, n2) {
+        return n1 + n2;
     }
-    console.log(sumer(1, 2)); // 3
-    console.log(sumer("a", "b")); // ab
-    console.log(sumer("1", 2)); // 12
-    // deno-lint-ignore no-inner-declarations
-    function sum(num1, num2, isPrint, msg) {
-        var res = num1 + num2;
+    console.log(sumup(1, 2)); // 3
+    console.log(sumup("a", "b")); // ab
+    console.log(sumup("1", 2)); // 12
+    function sum(n1, n2, isPrint, msg) {
+        var res = n1 + n2;
         if (isPrint) {
             console.log(msg + " " + res); // 30
         }
@@ -75,6 +71,7 @@
     var names = [];
     names.push("john");
     var person = ["john", 28, "male", 1000];
+    // person.push(true); // error
     console.log(person); // Array(4) [ "john", 28, "male", 1000 ]
     for (var _i = 0, person_1 = person; _i < person_1.length; _i++) {
         var p = person_1[_i];
@@ -95,7 +92,6 @@
 }
 {
     // LECTURE 8: TUPLES IN TYPESCRIPT
-    //
     // array
     var employee1 = [123, "john", 2000, true];
     console.log(employee1); // Array(4) [ 123, "john", 2000, true ]
@@ -103,6 +99,11 @@
     var employee2 = [123, "john", 2000, true];
     employee2 = [124, "mark", 1200, false];
     console.log(employee2); // Array(4) [ 124, "mark", 1200, false ]
+    employee2.push(true); // doesn't make sense (tuple is an array in disguise)
+    employee2.push(true);
+    employee2.push(true);
+    employee2.push(true);
+    console.log(employee2); // Array(4) [ 124, "mark", 1200, false, true, true, true, true ]
     // array
     var employee3 = [123, "john", 2000, true];
     console.log(employee3); // Array(4) [ 123, "john", 2000, true ]
@@ -118,10 +119,15 @@
         Roles[Roles["WRITE_ONLY"] = 2] = "WRITE_ONLY";
         Roles[Roles["READ_WRITE"] = 3] = "READ_WRITE";
     })(Roles || (Roles = {}));
+    var Sex = void 0;
+    (function (Sex) {
+        Sex["MALE"] = "male";
+        Sex["FEMALE"] = "female";
+    })(Sex || (Sex = {}));
     var user = {
         name: "john",
         age: 30,
-        gender: "male",
+        gender: Sex.MALE,
         role: Roles.ADMIN,
     };
     if (user.role === Roles.ADMIN) {
@@ -144,19 +150,25 @@
 {
     // LECTURE 11: UNION TYPE IN TYPESCRIPT
     {
-        var user_1 = null; // using | makes it a union type
-        // deno-lint-ignore no-inner-declarations
         function getUser() {
             var uname = "john";
             var uage = 28;
-            user_1 = { name: uname, age: uage };
-            return user_1;
+            return { name: uname, age: uage };
         }
-        getUser();
+        var user = null; // using `|` makes it a union type
+        user = getUser();
+        console.log(user); // Object { name: "john", age: 28 }
     }
     {
-        // deno-lint-ignore no-inner-declarations
         function printStatus1(message, code) {
+            switch (typeof code) {
+                case "string":
+                    console.log("".concat(message, ". Status code: ").concat(code.trim()));
+                    break;
+                default:
+                    console.log("".concat(message, ". Status code: ").concat(code));
+                    break;
+            }
             if (typeof code === "string") {
                 console.log("".concat(message, ". Status code: ").concat(code.trim()));
             }
@@ -177,7 +189,6 @@
         console.log(str, str2); // Hello, World! Some string
     }
     {
-        // deno-lint-ignore no-inner-declarations
         function roleMessage1(role) {
             switch (role) {
                 case "admin":
@@ -189,21 +200,19 @@
                 case "read-write":
                     console.log("You have read / write permission on this site");
                     break;
-                default:
-                    console.log("unknown user permission");
             }
         }
         roleMessage1("admin");
+        // roleMessage1("adfa"); // error
     }
 }
 {
-    // LECTURE 13: UNDERSTANDING TYPE ALIAS
+    // LECTURE 13: UNDERSTANDING TYPE ALIASES
     {
         var str = "Hello";
         console.log(str); // Hello
     }
     {
-        // deno-lint-ignore no-inner-declarations
         function printStatus2(message, code) {
             if (typeof code === "string") {
                 console.log("".concat(message, ". Status code: ").concat(code.trim()));
@@ -216,7 +225,6 @@
         printStatus2("Resource was not found", "404"); // Resource was not found. Status code: 404
     }
     {
-        // deno-lint-ignore no-inner-declarations
         function roleMessage2(role) {
             switch (role) {
                 case "admin":
@@ -235,23 +243,19 @@
         roleMessage2("admin"); // You have admin permission on this site.
     }
     {
-        // deno-lint-ignore no-inner-declarations
         function getFullName(user) {
-            return user.firstname + " " + user.lastname;
+            return user.fstName + " " + user.lstName;
         }
-        // deno-lint-ignore no-inner-declarations
         function isEligibleForVoting(user) {
             return user.age >= 18;
         }
-        var user = { firstname: "john", lastname: "smith", age: 32 };
+        var user = { fstName: "john", lstName: "smith", age: 32 };
         console.log(getFullName(user)); // john smith
         console.log(isEligibleForVoting(user)); // true
     }
 }
 {
     // LECTURE 14: FUNCTION RETURN TYPE
-    //
-    // deno-lint-ignore no-inner-declarations
     function print_add(num1, num2) {
         console.log(num1 + num2);
         return;
@@ -259,12 +263,10 @@
     console.log(print_add(12, 13)); // 25
 }
 {
-    // deno-lint-ignore no-inner-declarations
     function greetUser(user) {
         var greetmsg = "Hello, " + user.name;
         console.log(greetmsg);
     }
-    // deno-lint-ignore no-inner-declarations
     function isEligible(user) {
         console.log(user.age >= 18);
     }
@@ -272,7 +274,6 @@
     greet = greetUser;
     var user = { name: "john", age: 28 }; // Hello, john
     greet(user);
-    // deno-lint-ignore no-inner-declarations
     function sum1(n1, n2) {
         return n1 + n2;
     }
@@ -283,54 +284,56 @@
 }
 {
     // LECTURE 16: FUNCTION TYPE FOR CALLBACK
-    var addNumbers = void 0;
-    // deno-lint-ignore no-inner-declarations
     function sum2(num1, num2) {
         return num1 + num2;
     }
+    var addNumbers = void 0;
     addNumbers = sum2;
-    // deno-lint-ignore no-inner-declarations
+    console.log(addNumbers(1, 2)); // 3
     function add(num1, num2) {
         console.log(num1 + num2);
     }
     add(1, 2); // 3
-    // addNumbers = add; //Error
-    // deno-lint-ignore no-inner-declarations
     function getResult(num1, num2, print) {
         var result = num1 + num2;
         print("Sum = ", result);
     }
-    // deno-lint-ignore no-inner-declarations
     function display(msg, result) {
         console.log(msg + result);
     }
     getResult(12, 13, display); // Sum = 25
 }
 {
-    // LECTURE 17: UNION TYPE IN TYPESCRIPT
+    // LECTURE 17: UNKNOWN TYPE IN TYPESCRIPT
     var inputVal = void 0;
     var uname = "Something";
     inputVal = 100;
     inputVal = "Hello, world";
+    // If inputVal would be an `any` it'd work!
+    // uname = inputVal; // error: Type 'unknown' is not assignable to type 'string'
+    // This works!
     if (typeof inputVal === "string") {
-        uname = inputVal;
+        uname = inputVal; // tsc knows inputVal is a string!
     }
     console.log(uname); // Hello, world
     console.log(typeof inputVal); // string
 }
 {
-    // LECTURE 18: `never` TYPE IN TYPESCRIPT
-    //
-    // deno-lint-ignore no-inner-declarations
+    // LECTURE 18: NEVER TYPE IN TYPESCRIPT
     function greetUser1(name) {
         console.log("Hello, " + name);
     }
     greetUser1("John"); // Hello, John
-    // deno-lint-ignore no-inner-declarations
     function createerror(errormsg, errorCode) {
         throw { message: errormsg, code: errorCode };
+        // console.log(errormsg); // Unreachable code detected
     }
-    //createerror('Internal server error', 500);
+    function infinite() {
+        while (true) {
+            // ...
+        }
+    }
+    //createerror('Internal server error', 500);     // Unreachable code detected
     console.log(greetUser1("Mark")); // Hello, Mark
     console.log(createerror("Page not found", 404)); // Uncaught: Object { message: "Page not found", code: 404 }
 }
