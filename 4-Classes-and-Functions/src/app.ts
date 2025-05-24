@@ -1,352 +1,384 @@
-/***************************************************
- * ******LECTURE 37: CREATING & USING CLASS*********
- ***************************************************/
-/*class User{
-    firstname: string;
-    lastname: string;
-    age: number;
-    gender: string;
+{
+    // LECTURE 37: CREATING & USING CLASS (class)
 
-    constructor(fn: string, ln: string, a: number, g: string){
-        this.firstname = fn;
-        this.lastname = ln;
-        this.age = a;
-        this.gender = g;
+    enum Gender {
+        MALE = 'male',
+        FEMALE = 'female'
     }
 
-    greetuser(salutation: string){
-        const msg = 'Hello ' + salutation+'. ' + this.firstname + ' ' + this.lastname;
-        console.log(msg)
-    }
-}
+    class User {
+        firstname: string;
+        lastname: string;
+        age: number;
+        gender: Gender;
 
-const user1 = new User('john', 'smith', 28, 'male');
-const user2 = new User('merry', 'jane', 32, 'female');
-const user3 = new User('mark', 'vought', 29, 'male');
-
-user1.greetuser('Mr');
-user2.greetuser('Mrs');
-
-// console.log(user1);
-// console.log(user2);
-// console.log(user3);*/
-
-
-
-/***************************************************
- * *********LECTURE 39: ACCESS MODIFIERS************
- ***************************************************/
-
-
-/*class Employee{
-    constructor(public empName: string, private salary: number, public baseLocation: string, public isEligible: boolean, private hikePercent: number, public readonly empId: number){
-    }
-
-    public getSalary(){
-        if(this.isEligible){
-            return this.getNewsalary()
+        constructor(fstName: string, lstName: string, age: number, gender: Gender) {
+            this.firstname = fstName;
+            this.lastname = lstName;
+            this.age = age;
+            this.gender = gender;
         }
-        return this.salary;
-    }
 
-    private getNewsalary(){
-        return this.salary + this.salary * this.hikePercent / 100;
-    }
-}
-
-const employee = new Employee('john smith', 10000, 'london', true, 20, 101);
-console.log(employee.getSalary());
-employee.empId = 200;
-console.log(employee.empId)*/
-
-
-
-/***************************************************
- * *********LECTURE 32: INHERITANCE*****************
- ***************************************************/
-/*class Person{
-    name: string;
-    protected dob: string;
-    gender: string;
-
-    constructor(name: string, dob: string, gender: string){
-        this.name = name;
-        this.dob = dob;
-        this.gender = gender;
-    }
-
-    calculateAge(){
-        console.log('Calculate Age of Person called');
-        return new Date().getFullYear() - new Date(this.dob).getFullYear();
-    }
-}
-
-class Employee extends Person{
-    salary: number;
-    bonus: number;
-
-    constructor(n: string, dob: string, gen: string, salary: number, bonus: number){
-        super(n, dob, gen);
-        this.salary = salary;
-        this.bonus = bonus;
-    }
-
-    getSalary(){
-        return this.salary + this.bonus;
-    }
-
-    calculateAge(): number {
-        console.log('Calculate Age of Employee called');
-        return 2024 - new Date(this.dob).getFullYear();
-    }
-}
-
-const emp = new Employee('john', '08-30-1991', 'male', 10000, 2000);
-console.log(emp.calculateAge());*/
-
-
-/***************************************************
- * *********LECTURE 44: GETTER & SETTER*************
- ***************************************************/
-
-/*class Person{
-    public name: string;
-    private _age: number | null = null;
-
-    get age(){
-        if(this._age != null){
-            return this._age;
+        greetuser(salutation: string) {
+            const msg = `Hello ${salutation}. ${this.firstname} ${this.lastname}!`;
+            console.log(msg)
         }
-        throw new Error('Age is not defined for person: ' + this.name)
-        
     }
 
-    set age(value: number){
-        if(value > 0)
-            this._age = value;
-        else
-            throw new Error('Age cannot be a negative value.')
-    }
+    const user1 = new User('John', 'Smith', 28, Gender.MALE);
+    const user2 = new User('Merry', 'Jane', 32, Gender.FEMALE);
+    const user3 = new User('Mark', 'Vought', 29, Gender.MALE);
 
-    constructor(name: string){
-        this.name = name;
-    }
+    user1.greetuser('Mr');   // Hello Mr. John Smith!
+    user2.greetuser('Mrs');  // Hello Mrs. Merry Jane!
+    user3.greetuser('Mr');   // Hello Mr. Mark Vought!
 }
 
-const person = new Person('john');
-person.age = -10;
-console.log(person.age);
 
-class Circle{
-    private _radius: number;
+{
+    // LECTURE 39: ACCESS MODIFIERS (private, public, readonly)
 
-    get radius() {
-        return this._radius;
-    }
-
-    set radius(value: number) {
-        this._radius = value;
-    }
-
-    get diameter(){
-        return this._radius * 2;
-    }
-
-    set diameter(value: number){
-        this._radius = value / 2;
-    }
-}*/
-
-
-/***************************************************
- * ****LECTURE 45: STATIC METHODS & PROPERTIES******
- ***************************************************/
-/*class Employee{
-    public firstname: string;
-    public lastname: string;
-    public static count: number = 0;
-
-    constructor(firstname: string, lastname: string){
-        this.firstname = firstname;
-        this.lastname = lastname;
-        Employee.count++;
-    }
-
-    static sayHello(){
-        return 'Hi There!';
-    }
-}
-
-const emp1 = new Employee('john', 'smith');
-console.log(Employee.count);
-
-const emp2 = new Employee('john', 'smith');
-console.log(Employee.count);
-
-const emp3 = new Employee('john', 'smith');
-console.log(Employee.count);
-
-console.log(Employee.sayHello());*/
-
-
-
-/***************************************************
- * ****LECTURE 45: STATIC METHODS & PROPERTIES******
- ***************************************************/
-/*abstract class Employee{
-    public firstname: string;
-    public lastname: string;
-
-    abstract getSalary(): number;
-
-    constructor(fn: string, ln: string){
-        this.firstname = fn;
-        this.lastname = ln;
-    }
-}
-
-class PermanentEmployee extends Employee{
-    monthlySalary: number;
-    constructor(fn: string, ln: string, salary: number){
-        super(fn, ln);
-        this.monthlySalary = salary;
-    }
-
-    getSalary(): number {
-        return this.monthlySalary * 12;
-    }
-}
-
-class ContractEmployee extends Employee{
-    hourlySalary: number;
-
-    constructor(fn: string, ln: string, salary: number){
-        super(fn, ln);
-        this.hourlySalary = salary;
-    }
-
-    getSalary(): number {
-        return this.hourlySalary * 9 * 365;
-    }
-}
-
-const emp1 = new PermanentEmployee('john', 'smith', 1000);
-console.log(emp1.getSalary());
-
-const emp2 = new ContractEmployee('mark', 'vought', 10);
-console.log(emp2.getSalary());*/
-
-
-/***************************************************
- * *******LECTURE 46: PRIVATE CONSTRUCTOR***********
- ***************************************************/
-/*class Person{
-    private static _instance: Person;
-
-    private constructor(){
-
-    }
-
-    static getInstance(){
-        if(Person._instance){
-            return Person._instance;
+    class Employee {
+        constructor(public empName: string, //
+            private salary: number,         //
+            public baseLocation: string,    //
+            public isEligible: boolean,     //
+            private hikePercent: number,    //
+            public readonly empId: number) {
         }
-        Person._instance = new Person();
-        return Person._instance;
+
+        public getSalary() {
+            if (this.isEligible) {
+                return this.getNewsalary()
+            }
+            return this.salary;
+        }
+
+        private getNewsalary() {
+            return this.salary + this.salary * this.hikePercent / 100;
+        }
+    }
+
+    const employee = new Employee('john smith', 10000, 'london', true, 20, 101);
+    console.log(employee.getSalary()); // 12000 
+
+    // employee.empId = 200; // error: Cannot assign to 'empId' because it is a read-only property
+}
+
+{
+    // LECTURE 32: INHERITANCE (extends)
+
+    class Person {
+        name: string;
+        protected dob: string;
+        gender: string;
+
+        constructor(name: string, dob: string, gender: string) {
+            this.name = name;
+            this.dob = dob;
+            this.gender = gender;
+        }
+
+        calculateAge(): number {
+            console.log('calculateAge of Person called');
+            return new Date().getFullYear() - new Date(this.dob).getFullYear();
+        }
+    }
+
+    class Employee extends Person {
+        salary: number;
+        bonus: number;
+
+        constructor(name: string, dob: string, gen: string, salary: number, bonus: number) {
+            super(name, dob, gen);
+            this.salary = salary;
+            this.bonus = bonus;
+        }
+
+        getSalary() {
+            return this.salary + this.bonus;
+        }
+
+        calculateAge(): number {
+            console.log('calculateAge of Employee called');
+            return 2024 - new Date(this.dob).getFullYear();
+        }
+    }
+
+    const p = new Person('Mark', '01-01-1980', 'male');
+    console.log(p.calculateAge()); // calculateAge of Person called | 45
+
+    const e = new Employee('john', '08-30-1991', 'male', 10000, 2000);
+    console.log(e.calculateAge()); // Calculate Age of Employee called | 33
+}
+
+
+{
+    // LECTURE 44: GETTER & SETTER (set/get)
+
+    {
+        class Person {
+            public name: string;
+            private _age: number | null = null;
+
+            get age() {
+                if (this._age != null) {
+                    return this._age;
+                }
+                throw new Error('Age is not defined for person: ' + this.name + '!')
+            }
+
+            set age(value: number) {
+                if (value >= 0)
+                    this._age = value;
+                else
+                    throw new Error('Age must be a positive value!')
+            }
+
+            constructor(name: string, age: number) {
+                this.name = name;
+                this._age = age;
+            }
+        }
+
+        const person = new Person('John', 28);
+        // person.age = -10;     // error: will throw an exception
+        console.log(person.age); // 28
+    }
+
+    {
+        class Circle {
+            private _radius: number;
+
+            constructor(radius: number) {
+                this._radius = radius;
+            }
+
+            get radius() {
+                return this._radius;
+            }
+
+            set radius(value: number) {
+                this._radius = value;
+            }
+
+            // derived property
+            get diameter() {
+                return this._radius * 2;
+            }
+
+            set diameter(value: number) {
+                this._radius = value / 2;
+            }
+        }
+
+        const c = new Circle(10);
+        console.log(c.radius);   // 10
+        console.log(c.diameter); // 20
     }
 }
 
-const person1 = Person.getInstance();
-const person2 = Person.getInstance();
 
-console.log(person1 === person2);
-*/
+{
+    // LECTURE 45: STATIC METHODS & PROPERTIES
 
+    class Employee {
+        public firstname: string;
+        public lastname: string;
+        public static count: number = 0; // class variable
 
-/***************************************************
- * ***********LECTURE 48: INTERFACE*****************
- ***************************************************/
-/*interface Roles{
-    getRole(): string;
+        constructor(firstname: string, lastname: string) {
+            this.firstname = firstname;
+            this.lastname = lastname;
+            Employee.count++;
+        }
+
+        // class method
+        static sayHello() {
+            return 'Hi There!';
+        }
+    }
+
+    new Employee('John', 'Smith');
+    console.log(Employee.count);      // 1
+
+    new Employee('John', 'Smith');
+    console.log(Employee.count);      // 2
+
+    new Employee('John', 'Smith');
+    console.log(Employee.count);      // 3
+
+    console.log(Employee.sayHello()); // Hi There!
 }
 
-interface User extends Roles{
-    firstname: string;
-    lastname: string;
-    readonly company: string;
-    location?: string;
 
-    greetUser(): void;
-    getFullName(): string;
+{
+    // LECTURE 45: ABSTRACT CLASS
+
+    // abstract/virtual class
+    abstract class Employee {
+        public fstName: string;
+        public lstName: string;
+
+        // abstract/virtual method
+        abstract getSalary(): number;
+
+        constructor(fstName: string, lstName: string) {
+            this.fstName = fstName;
+            this.lstName = lstName;
+        }
+    }
+
+    class PermanentEmployee extends Employee {
+        monthlySalary: number;
+
+        constructor(fstName: string, lstName: string, salary: number) {
+            super(fstName, lstName);
+            this.monthlySalary = salary;
+        }
+
+        // overridden
+        getSalary(): number {
+            return this.monthlySalary * 12;
+        }
+    }
+
+    class ContractEmployee extends Employee {
+        hourlySalary: number;
+
+        constructor(fstName: string, lstName: string, salary: number) {
+            super(fstName, lstName);
+            this.hourlySalary = salary;
+        }
+
+        // overridden
+        getSalary(): number {
+            return this.hourlySalary * 9 * 365;
+        }
+    }
+
+    const e1 = new PermanentEmployee('John', 'Smith', 1000);
+    console.log(e1.getSalary()); // 12000 
+
+    const e2 = new ContractEmployee('Mark', 'Vought', 10);
+    console.log(e2.getSalary()); // 32850
 }
 
-class Admin implements User{
-    age: number = 30;
-    company: string = 'Google';
-    constructor(public firstname: string, public lastname: string){
+{
+    // LECTURE 46: PRIVATE CONSTRUCTOR & SINGLETON PATTERN
 
+    class Person {
+        private static _instance: Person;
+
+        private constructor() {
+
+        }
+
+        static getInstance() {
+            // person exists; return it
+            if (Person._instance) {
+                return Person._instance;
+            }
+            // person doesn't exists; create and return it
+            else {
+                Person._instance = new Person();
+                return Person._instance;
+            }
+        }
     }
 
-    greetUser(){
-        console.log("Hello Admin: " + this.getFullName())
-    }
+    // new Person(); // error: Constructor of class 'Person' is private and only accessible within the class declaration
 
-    getFullName(): string {
-        return this.firstname + ' ' + this.lastname;
-    }
+    const person1 = Person.getInstance();
+    const person2 = Person.getInstance();
 
-    getRole(): string {
-        return 'admin';
-    }
+    console.log(person1 === person2); // true
 }
 
-class Member implements User{
-    company: string = 'Google';
-    location?: string | undefined = 'London';
-    constructor(public firstname: string, public lastname: string, loc?: string){
-        this.location = loc;
+// LECTURE 48: INTERFACE
+{
+    interface Roles {
+        getRole(): string;
     }
 
-    greetUser(){
-        console.log("Hello Member: " + this.getFullName())
+    interface User extends Roles {
+        fstName: string;
+        lstName: string;
+        readonly company: string;
+        location?: string;
+
+        greetUser(): void;
+        getFullName(): string;
     }
 
-    getFullName(): string {
-        return this.firstname + ' ' + this.lastname;
+    class Admin implements User {
+        age: number = 30;
+        company: string = 'Google';
+
+        constructor(public fstName: string, public lstName: string) {
+        }
+
+        greetUser() {
+            console.log("Hello Admin: " + this.getFullName())
+        }
+
+        getFullName(): string {
+            return this.fstName + ' ' + this.lstName;
+        }
+
+        getRole(): string {
+            return 'admin';
+        }
     }
 
-    getRole(): string {
-        return 'member';
+    class Member implements User {
+        company: string = 'Google';
+        location?: string | undefined = 'London';
+
+        constructor(public fstName: string, public lstName: string, location?: string) {
+            this.location = location;
+        }
+
+        greetUser() {
+            console.log("Hello Member: " + this.getFullName())
+        }
+
+        getFullName(): string {
+            return this.fstName + ' ' + this.lstName;
+        }
+
+        getRole(): string {
+            return 'member';
+        }
     }
+
+    function displayGreetMessage(user: User) {
+        user.greetUser();
+    }
+
+    let admin: User;
+    admin = new Admin('John', 'Smith');
+    console.log(admin.getRole());  // admin
+    displayGreetMessage(admin);    // Hello Admin: John Smith
+
+    const member = new Member('Merry', 'Jane');
+    console.log(member.getRole()); // member
+    displayGreetMessage(member);   // Hello Member: Merry Jane
 }
 
-function displayGreetMessage(user: User){
-    user.greetUser();
-}
 
-let admin: User;
-admin = new Admin('john', 'smith');
-console.log(admin.getRole());
+{
+    // LECTURE 51: INTERFACE AS FUNCTION TYPE
 
-const member = new Member('merry', 'jane');
+    //type SumFn = (num1: number, num2: number) => number;
 
-displayGreetMessage(admin);
-displayGreetMessage(member);
-console.log(member.getRole());
-*/
+    interface SumFn {
+        (num1: number, num2: number): number
+    }
 
+    let add: SumFn;
 
-/***************************************************
- * ****LECTURE 51: INTERFACE AS FUNCTION TYPE*******
- ***************************************************/
-//type SumFn = (num1: number, num2: number) => number;
-
-interface SumFn{
-    (num1: number, num2: number): number
-}
-
-let add: SumFn;
-
-add = (n1: number, n2: number) => {
-    return n1 + n2;
+    add = (n1: number, n2: number) => {
+        return n1 + n2;
+    }
 }
