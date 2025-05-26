@@ -1,10 +1,13 @@
 {
-  // INTERSECTION TYPE IN TYPESCRIPT
+  // INTERSECTION TYPE IN TYPESCRIPT (&)
 
   {
-    type stringOrNumber = string | number;
-    type boolOrNumber = boolean | number;
-    type myNumberType = stringOrNumber & boolOrNumber;
+    // basic types
+
+    type stringOrNumber = string | number;             // union type
+    type boolOrNumber = boolean | number;              // union type
+
+    type myNumberType = stringOrNumber & boolOrNumber; // intersection type
 
     const x: myNumberType = 42;
     console.log(x); // 42
@@ -14,12 +17,14 @@
   }
 
   {
-    interface user {
+    // object types
+
+    type user = {
       name: string,
       age: number
     }
 
-    interface admin {
+    type admin = {
       name: string,
       role: string
     }
@@ -35,7 +40,7 @@
   }
 
   {
-    interface Order {
+    type Order = {
       id: number,
       items: string[]
     }
@@ -52,12 +57,15 @@
 }
 
 {
-  // TYPE GUARDS IN TYPESCRIPT
+  // TYPE GUARDS IN TYPESCRIPT (typeof, instanceof, in)
 
   {
+    // basic types
+
     type StringOrNumber = string | number;
 
     function addition(a: StringOrNumber, b: StringOrNumber) {
+      // type guard
       if (typeof a === 'string' || typeof b === 'string')
         return a.toString() + b.toString(); // concatenation
       else
@@ -70,6 +78,8 @@
   }
 
   {
+    // classes
+
     class Animal {
       makeSound() {
         console.log('Generic animal sound');
@@ -83,11 +93,12 @@
     }
 
     function makeCreatureSound(creature: Animal) {
-      if (creature instanceof Dog) { // instanceof is code smell; red flag
+      // type guard
+      if (creature instanceof Dog)  // instanceof is code smell; red flag
         creature.bark()
-      } else {
+      else
         creature.makeSound();
-      }
+
     }
 
     let animal = new Animal();
@@ -98,39 +109,38 @@
   }
 
   {
-    interface User {
+    type User = {
       name: string,
       email?: string;
     }
 
     function greetUser(user: User) {
-      if ('email' in user) {
-        console.log(`Hello ${user.name}. Your email is: ${user.email}`);
-      } else {
+      // type guard
+      if ('email' in user)
+        console.log(`Hello ${user.name}. Your email is ${user.email}.`);
+      else
         console.log(`Hello ${user.name}.`);
-      }
-
     }
 
     greetUser({ name: 'John' });                          // Hello John.
-    greetUser({ name: 'Mark', email: 'mark@gmail.com' }); // Hello Mark. Your email is: mark@gmail.com
+    greetUser({ name: 'Mark', email: 'mark@gmail.com' }); // Hello Mark. Your email is mark@gmail.com.
   }
 }
 
 {
-  // DISCRIMINATED UNION
+  // DISCRIMINATED UNION (kind, tag)
 
   enum GeoForm {
     CIRCLE,
     SQUARE
   }
 
-  interface circle {
-    kind: GeoForm.CIRCLE,
+  type circle = {
+    kind: GeoForm.CIRCLE, // kind acts as a tag
     radius: number;
   }
 
-  interface square {
+  type square = {
     kind: GeoForm.SQUARE,
     length: number;
   }
@@ -140,6 +150,7 @@
   function calcArea(shape: Shape) {
     let res: number;
 
+    // discriminated union
     switch (shape.kind) {
       case GeoForm.CIRCLE:
         res = 3.14 * shape.radius * shape.radius;
@@ -157,62 +168,75 @@
 }
 
 {
-  // TYPE CASTING IN TYPESCRIPT
+  // TYPE CASTING IN TYPESCRIPT (<..>, as)
 
-  // let fname = <HTMLInputElement>document.querySelector('#fname')!;
+  {
+    let inputElem = document.querySelector('input')!;                  // Typescript infers - corretcly - inputElem to be of type HTMLInputElement
+    inputElem.value = 'John';
+  }
 
-  let fname = document.querySelector('#fname');
+  {
+    let fname1 = document.querySelector('#fname')!;                    // Typescript infers fname1 to be of type Element
+    console.log(fname1);                                               // <input id="fname" type="text">
+  }
 
-  if (fname) {
-    (fname as HTMLInputElement).value = 'John'
+  {
+    let fname2 = <HTMLInputElement>document.querySelector('#fname')!;  // type-cast (<..>)
+    fname2.value = 'John';
+  }
+
+  {
+    let fname = document.querySelector('#fname')! as HTMLInputElement; // type-cast (as)
+    fname.value = 'John';
   }
 }
-
 
 {
   // INDEX PROPERTIES
 
+  // dynamic set of properties (possibly not known beforehand)
+
   {
-    interface Product {
+    type Product = {
       id: number;
       name: string;
       [prop: string]: string | number
     }
 
-    const product1: Product = {
+    const p1: Product = {
       id: 1,
       name: "T-Shirt",
       color: 'Red',
       price: 123
     }
 
-    const product2: Product = {
+    const p2: Product = {
       id: 2,
       name: "Mug",
       material: 'Ceramic',
       capacity: 300
     }
 
-    console.log(product1); // Object { id: 1, name: "T-Shirt", color: "Red", price: 123 }
-    console.log(product2); // Object { id: 2, name: "Mug", material: "Ceramic", capacity: 300 }
+    console.log(p1); // Object { id: 1, name: "T-Shirt", color: "Red", price: 123 }
+    console.log(p2); // Object { id: 2, name: "Mug", material: "Ceramic", capacity: 300 }
   }
 
   {
-    interface Settings {
+    type Settings = {
       [props: string]: boolean | string | number
     }
 
-    const mySettings: Settings = {
+    const s: Settings = {
       darkMode: true,
       customTheme: 'pink',
       fontSize: 16,
     }
 
-    console.log(mySettings); // Object { darkMode: true, customTheme: "pink", fontSize: 16 }
+    console.log(s); // Object { darkMode: true, customTheme: "pink", fontSize: 16 }
   }
 
   {
-    interface User {
+    type User = {
       name: string;
       [prop: string]: any
     }
@@ -228,7 +252,7 @@
 }
 
 {
-  // FUNCTION OVERLOADING
+  // FUNCTION TYPE OVERLOADING
 
   type StringOrNumber = string | number;
 
@@ -288,44 +312,49 @@
   }
 
   {
-    function expand<T extends object, U extends Object>(obj1: T, obj2: U) {
+    // type variable constraints (extends)
+    function expand<T extends Object, U extends Object>(obj1: T, obj2: U): T & U {
       return Object.assign(obj1, obj2);
     }
 
     let combined = expand(
       { name: 'john', age: 28 },
-      { name: 'john', gender: 'male' });
+      { name: 'john', gender: 'male' }
+    );
 
     console.log(combined);                                   // Object { name: "john", age: 28, gender: "male" }
   }
 }
 
 {
-  // THE KEYOF CONSTRAINT
+  // THE KEYOF CONSTRAINT (extends keyof)
 
-  function getPropValue<T extends object, U extends keyof T>(obj: T, key: U) {
-    return obj[key];
+  // function getPropValue<T extends Object>(obj: T, key: string) {            // error: type 'string' can't be used to index type 'Object'
+  function getPropValue<T extends Object, U extends keyof T>(obj: T, key: U) { // U are only strings that are properties in T
+    return obj[key];                                                           // key is a (string) literal type (in our case 'age')
   }
 
-  console.log(getPropValue({ name: 'john', age: 28 }, 'age')); // 28
+  console.log(getPropValue({ name: 'john', age: 28 }, 'age'));       // 28
+
+  // console.log(getPropValue({ name: 'john', age: 28 }, 'gender')); // error: Argument of type '"gender"' is not assignable to parameter of type '"name" | "age"'
 }
 
 {
   // CREATING A GENERIC CLASS
 
   type Book = {
-    name: string;
-    pages: number;
-    price: number
+    name: string,
+    pages: number,
+    price: number,
   }
 
   type Cloth = {
-    name: string;
-    size: string;
-    price: number
+    name: string,
+    size: string,
+    price: number,
   }
 
-  class ShoppingKart<T> {
+  class ShoppingCart<T> {
     private items: T[] = [];
 
     addItem(item: T) {
@@ -333,77 +362,72 @@
     }
 
     getItems() {
-      return this.items
+      return this.items;
     }
   }
 
-  const bookCart = new ShoppingKart<Book>();
+  // books
+  const bookCart = new ShoppingCart<Book>();
   bookCart.addItem({ name: 'A Book', pages: 225, price: 20 });
   bookCart.addItem({ name: 'Another Book', pages: 250, price: 25 });
+  console.log(...bookCart.getItems());   // Object { name: "A Book", pages: 225, price: 20 } Object { name: "Another Book", pages: 250, price: 25 }
 
-  const clothCart = new ShoppingKart<Cloth>();
+  // cloths
+  const clothCart = new ShoppingCart<Cloth>();
   clothCart.addItem({ name: 'T-Shirt', size: 'M', price: 225 });
+  console.log(...clothCart.getItems());  // Object { name: "T-Shirt", size: "M", price: 225 }
 
-  const strCart = new ShoppingKart<string>();
-  strCart.addItem('Hello');
-  strCart.addItem('World');
+  // primitive type 
+  const stringCart = new ShoppingCart<string>();
+  stringCart.addItem('Hello');
+  stringCart.addItem('World');
+  console.log(stringCart.getItems());    // Array [ "Hello", "World" ]
 }
 
 {
-  // GENERIC TYPE VS UNION TYPE
+  // PARTIAL & READ ONLY GENERICS (Partial<T>, Readonly<T>)
 
-  class ShoppingKart<T> {
-    private items: T[] = [];
-
-    addItem(item: T) {
-      this.items.push(item);
-    }
-    getItems() {
-      return this.items
-    }
-  }
-
-  const strCart = new ShoppingKart<string>();
-  strCart.addItem('Hello');
-  strCart.addItem('World');
-
-  const numCart = new ShoppingKart<number>();
-  numCart.addItem(200);
-  numCart.addItem(300);
-}
-
-{
-  // PARTIAL & READ ONLY GENERICS
-
-  interface UserSettings {
+  type UserSettings = {
     username: string;
     email: string;
     darkMode: boolean;
     language: string;
   }
 
-  function updateUserSettings(partialsettings: Partial<UserSettings>) {
-    console.log('Updating:', partialsettings)
+  {
+    // Partial makes all properties in UserSettings optional
+    function updateUserSettings(partialsettings: Partial<UserSettings>) {
+      console.log('Updating:', partialsettings)
+    }
+
+    const newSettings = {
+      darkMode: true,
+      language: 'fr'
+    }
+
+    updateUserSettings(newSettings); // Updating: Object { darkMode: true, language: "fr" }
   }
 
-  const user: Readonly<UserSettings> = {
-    username: 'johnsmith',
-    email: 'johnsmith@gmail.com',
-    darkMode: false,
-    language: 'en'
+  {
+    // Readonly makes all properties in UserSettings readonly
+    const user: Readonly<UserSettings> = {
+      username: 'johnsmith',
+      email: 'js@gmail.com',
+      darkMode: false,
+      language: 'en'
+    }
+
+    // user.language = 'de'; // error: 'language' is a read-only property
+
+    console.log(user.username); // johnsmith
   }
 
-  console.log(user.username); // johnsmith
+  {
+    // string[] == Array<String>
+    let arr: Readonly<string[]> = ['john', 'mark'];
 
-  const newSettings = {
-    darkMode: true,
-    language: 'fr'
+    // arr.push('mary');  // Property 'push' does not exist on type 'readonly string[]'
+
+    console.log(arr);     // Array(3) [ "john", "mark", "merry" ] (?!)
   }
-
-  // although user is Readonly
-  updateUserSettings(newSettings); // Updating: Object { darkMode: true, language: "fr" }
-
-  let arr: Readonly<string[]> = ['john', 'mark'];
-  arr.push('merry'); // Property 'push' does not exist on type 'readonly string[]'
-  console.log(arr);  // Array(3) [ "john", "mark", "merry" ] (?!)
 } 

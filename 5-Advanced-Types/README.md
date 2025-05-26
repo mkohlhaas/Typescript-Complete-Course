@@ -1,0 +1,1 @@
+- [Built-in Generics](https://oida.dev/typescript-built-in-generics/)
