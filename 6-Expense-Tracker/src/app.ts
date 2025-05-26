@@ -40,27 +40,45 @@ class Expense {
 addExpBtn.addEventListener('click', function (event) {
     event.preventDefault();
 
-    let type = expType.value === 'credit' ? ExpenseType.CREDIT : ExpenseType.DEBIT;
-    const exp = new Expense(type, expDesc.value, +expAmt.value);
+    let expenseType = expType.value === 'credit' ? ExpenseType.CREDIT : ExpenseType.DEBIT;
+    const exp = new Expense(expenseType, expDesc.value, +expAmt.value); // `+` -> converts to number
     expenseItems.push(exp);
 
     displayExpenseItems()
-
-    showBalance();
+    updateBalance();
 })
 
 // Functions
 
+//   expense
+
+function deleteExpense(id: number) {
+    removeExpense(id);
+    // update UI 
+    displayExpenseItems();
+    updateBalance();
+}
+
+function removeExpense(id: number) {
+    // find expense
+    const exp = expenseItems.find((expItem) => {
+        return expItem.id === id;
+    }) as Expense;
+    // remove expense
+    let index = expenseItems.indexOf(exp)
+    expenseItems.splice(index, 1);
+}
+
 function displayExpenseItems() {
+    // clear UI
     debitDiv.innerHTML = '';
     creditDiv.innerHTML = '';
 
-    for (let i = 0; i < expenseItems.length; i++) {
-        let expItem = expenseItems[i];
-        let containerDiv = expItem.type === ExpenseType.CREDIT ? creditDiv : debitDiv;
-
-        let cssClass = expItem.type === ExpenseType.CREDIT ? 'credit-item' : 'debit-item';
-        let template = `
+    // render expenses
+    for (const expItem of expenseItems) {
+        let containerDiv = expItem.type ? debitDiv : creditDiv;
+        let cssClass = expItem.type ? 'debit-item' : 'credit-item';
+        let expDiv = `
         <div class="${cssClass}">
             <div class="exp-desc">${expItem.description}</div>
             <div class="exp-amt">${expItem.amount}</div>
@@ -69,50 +87,26 @@ function displayExpenseItems() {
             </div>
         </div>
         `;
-        containerDiv?.insertAdjacentHTML('beforeend', template);
+        containerDiv?.insertAdjacentHTML('beforeend', expDiv);
     }
 }
 
-function calcBalance() {
-    return expenseItems.reduce((total, exp) => {
-        let amount: number;
-        if (exp.type === ExpenseType.CREDIT)
-            amount = exp.amount;
-        else
-            amount = -exp.amount;
+//   balance
 
-        return total + amount;
-    }, 0)
-}
-
-function showTotal() {
-    totalAmtDiv.textContent = 'Aval. Balance: ' + balance.toString();
-}
-
-function removeExpense(id: number) {
-    // find expense
-    const exp = expenseItems.find((el) => {
-        return el.id === id;
-    }) as Expense;
-    // remove expense
-    let index: number = expenseItems.indexOf(exp)
-    expenseItems.splice(index, 1);
-    // update balance
-    updateBalance(exp);
-}
-
-function deleteExpense(id: number) {
-    removeExpense(id);
-    // update UI & balance
-    displayExpenseItems();
-}
-
-function updateBalance(expense: Expense) {
-    console.log(expense);
+function updateBalance() {
+    calcBalance();
     showBalance();
 }
 
+function calcBalance() {
+    balance = expenseItems.reduce((total, exp) => {
+        if (exp.type === ExpenseType.CREDIT)
+            return total + exp.amount;
+        else
+            return total - exp.amount;
+    }, 0)
+}
+
 function showBalance() {
-    balance = calcBalance();
-    showTotal();
+    totalAmtDiv.textContent = 'Balance: ' + balance.toString();
 }
