@@ -1,39 +1,65 @@
-//ACCESS DOM ELEMENTS FROM TYPESCRIPT
+// DOM Elements 
+
 const expType = document.getElementById('expense-type')! as HTMLSelectElement;
 const expDesc = document.getElementById('desc')! as HTMLInputElement;
 const expAmt = document.getElementById('amount')! as HTMLInputElement;
 const addExpBtn = document.querySelector('.add-expense-btn')! as HTMLButtonElement;
-
 const debitDiv = document.querySelector('.expense-debit-item-container')! as HTMLDivElement;
 const creditDiv = document.querySelector('.expense-credit-item-container')! as HTMLDivElement;
 const totalAmtDiv = document.querySelector('.total-expense-amount')! as HTMLDivElement;
+
+// Globals
+
 let expenseItems: Expense[] = [];
+let balance: number = 0;
 
-let totalAmount: number = 0;
+// Enums
 
-class Expense{
+enum ExpenseType {
+    CREDIT,
+    DEBIT,
+}
+
+// Classes
+
+class Expense {
     private static currentId: number = 0;
     readonly id: number = 0;
-    type: 'credit' | 'debit' = 'debit';
-    description: string = '';
-    amount: number = 0;
 
-    constructor(type: 'credit' | 'debit', desc: string, amount: number){
-        this.type = type;
-        this.description = desc;
-        this.amount = amount;
+    constructor(
+        public type: ExpenseType = ExpenseType.DEBIT,
+        public description: string = '',
+        public amount: number = 0
+    ) {
         this.id = ++Expense.currentId;
     }
 }
 
-function DisplayExpenseItems(){
+// Callbacks
+
+addExpBtn.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    let type = expType.value === 'credit' ? ExpenseType.CREDIT : ExpenseType.DEBIT;
+    const exp = new Expense(type, expDesc.value, +expAmt.value);
+    expenseItems.push(exp);
+
+    displayExpenseItems()
+
+    showBalance();
+})
+
+// Functions
+
+function displayExpenseItems() {
     debitDiv.innerHTML = '';
     creditDiv.innerHTML = '';
-    for(let i = 0; i < expenseItems.length; i++){
-        let expItem = expenseItems[i];
-        let containerDiv = expItem.type === 'credit' ? creditDiv : debitDiv;
 
-        let cssClass = expItem.type === 'credit' ? 'credit-item' : 'debit-item';
+    for (let i = 0; i < expenseItems.length; i++) {
+        let expItem = expenseItems[i];
+        let containerDiv = expItem.type === ExpenseType.CREDIT ? creditDiv : debitDiv;
+
+        let cssClass = expItem.type === ExpenseType.CREDIT ? 'credit-item' : 'debit-item';
         let template = `
         <div class="${cssClass}">
             <div class="exp-desc">${expItem.description}</div>
@@ -47,53 +73,46 @@ function DisplayExpenseItems(){
     }
 }
 
-function calculateTotal(){
+function calcBalance() {
     return expenseItems.reduce((total, exp) => {
-        let amount = exp.amount;
-        if(exp.type === 'debit'){
+        let amount: number;
+        if (exp.type === ExpenseType.CREDIT)
+            amount = exp.amount;
+        else
             amount = -exp.amount;
-        }
-        total += amount;
-        return total;
+
+        return total + amount;
     }, 0)
 }
-function showTotal(){
-    totalAmtDiv.textContent = 'Aval. Balance: ' + totalAmount.toString();
+
+function showTotal() {
+    totalAmtDiv.textContent = 'Aval. Balance: ' + balance.toString();
 }
 
-
-addExpBtn.addEventListener('click', function(event){
-    event.preventDefault();
-
-    let type: 'credit' | 'debit' = expType.value === 'credit' ? 'credit' : 'debit';
-    const exp = new Expense(type, expDesc.value, +expAmt.value);
-    expenseItems.push(exp);
-    
-    DisplayExpenseItems()
-
-    totalAmount = calculateTotal();
-    showTotal();
-})
-
-function deleteExpense(id: number){
-    const exp: Expense = expenseItems.find((el) => {
+function removeExpense(id: number) {
+    // find expense
+    const exp = expenseItems.find((el) => {
         return el.id === id;
     }) as Expense;
+    // remove expense
     let index: number = expenseItems.indexOf(exp)
     expenseItems.splice(index, 1);
-
-    DisplayExpenseItems();
-
+    // update balance
     updateBalance(exp);
 }
 
-function updateBalance(expense: Expense){
+function deleteExpense(id: number) {
+    removeExpense(id);
+    // update UI & balance
+    displayExpenseItems();
+}
+
+function updateBalance(expense: Expense) {
     console.log(expense);
-    let amount = expense.amount;
-    if(expense.type === 'credit'){
-        totalAmount -= amount;
-    }else{
-        totalAmount += amount;
-    }
+    showBalance();
+}
+
+function showBalance() {
+    balance = calcBalance();
     showTotal();
 }
