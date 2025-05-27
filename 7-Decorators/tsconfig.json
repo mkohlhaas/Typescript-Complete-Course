@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "experimentalDecorators": true,
+    "experimentalDecorators": true, // needed for this chapter
     "module": "commonjs",
     "rootDir": "./src",
     "outDir": "./dist",
@@ -13,5 +13,7 @@
     "noUnusedParameters": false,
     "skipLibCheck": true
   },
-  "include": ["./src"]
+  "include": [
+    "./src"
+  ]
 }

@@ -1,0 +1,1 @@
+- [TypeScript Decorators in Brief](https://refine.dev/blog/typescript-decorators/#property-decorators-in-typescript)
