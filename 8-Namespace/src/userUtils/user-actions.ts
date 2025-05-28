@@ -1,4 +1,6 @@
-import User, { PI } from './../models/user.js';
+import User, { PI } from './../models/user';
+
+console.log(PI);
 
 let userList: User[] = [];
 

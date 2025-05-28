@@ -1,10 +1,12 @@
-//Understanding NameSpace in TypeScript
+import * as actions from './userUtils/user-actions';
+import User from './models/user';
 
-import * as actions from './userUtils/user-actions.js';
-import User from './models/user.js';
+const u1 = actions.createUser('John', 28, 'male');
+const u2 = actions.createUser('Mery', 30, 'female');
+const u3 = new User('Mike', 34, 'male');
 
-const u1 = actions.createUser('john', 28, 'male');
-const u2 = actions.createUser('mery', 30, 'female');
-console.log(u1, u2);
+console.log(u1, u2, u3);
 
 console.log(actions.getUsers());
+
+console.log("Application is running!");
